@@ -347,12 +347,12 @@ class ModuleSms {
 		$this->sender->cellphone = preg_replace('/[^0-9]/','',$this->sender->cellphone);
 		$this->receiver->cellphone = preg_replace('/[^0-9]/','',$this->receiver->cellphone);
 		
-		if (preg_match('/^0[0-9]{9,10}$/',$this->sender->cellphone) == false) {
+		if (preg_match('/^0[0-9]{8,10}$/',$this->sender->cellphone) == false) {
 			$this->reset();
 			return 'WRONG_SENDER_CELLPHONE';
 		}
 		
-		if (preg_match('/^0[0-9]{9,10}$/',$this->sender->cellphone) == false) {
+		if (preg_match('/^0[0-9]{8,10}$/',$this->receiver->cellphone) == false) {
 			$this->reset();
 			return 'WRONG_RECEIVER_CELLPHONE';
 		}
@@ -432,6 +432,31 @@ class ModuleSms {
 		}
 		
 		return $message;
+	}
+	
+	/**
+	 * 현재 모듈에서 처리해야하는 요청이 들어왔을 경우 처리하여 결과를 반환한다.
+	 * 소스코드 관리를 편하게 하기 위해 각 요쳥별로 별도의 PHP 파일로 관리한다.
+	 * 작업코드가 '@' 로 시작할 경우 사이트관리자를 위한 작업으로 최고관리자 권한이 필요하다.
+	 *
+	 * @param string $action 작업코드
+	 * @return object $results 수행결과
+	 * @see /process/index.php
+	 */
+	function doProcess($action) {
+		$results = new stdClass();
+		
+		/**
+		 * 모듈의 process 폴더에 $action 에 해당하는 파일이 있을 경우 불러온다.
+		 */
+		if (is_file($this->getModule()->getPath().'/process/'.$action.'.php') == true) {
+			INCLUDE $this->getModule()->getPath().'/process/'.$action.'.php';
+		}
+		
+		$values = (object)get_defined_vars();
+		$this->IM->fireEvent('afterDoProcess','sms',$action,$values,$results);
+		
+		return $results;
 	}
 }
 ?>
