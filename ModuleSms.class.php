@@ -368,10 +368,10 @@ class ModuleSms {
 				$oMessage = '';
 			}
 			
+			$results = new stdClass();
+			$results->success = false;
+			
 			if ($is_fire_event == true) {
-				$results = new stdClass();
-				$results->success = false;
-				
 				$values = new stdClass();
 				$values->sender = $this->sender;
 				$values->receiver = $this->receiver;

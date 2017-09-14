@@ -1,0 +1,25 @@
+{
+	"text":{
+	},
+	"error":{
+	},
+	"status":{
+		"SUCCESS":"성공",
+		"FAIL":"실패"
+	},
+	"admin":{
+		"list":{
+			"title":"SMS발송기록",
+			"addBoard":"SMS발송",
+			"columns":{
+				"receiver_name":"수신자",
+				"receiver":"수신번호",
+				"sender_name":"발송자",
+				"sender":"발송번호",
+				"message":"내용",
+				"reg_date":"전송일자",
+				"status":"전송결과"
+			}
+		}
+	}
+}

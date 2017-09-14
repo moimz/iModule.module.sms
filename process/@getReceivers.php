@@ -17,7 +17,7 @@ $lists = array();
 for ($i=0, $loop=count($receivers);$i<$loop;$i++) {
 	$member = $this->IM->getModule('member')->getMember($receivers[$i]->midx);
 	
-	$cellphone = $receivers[$i]->cellphone && CheckPhoneNumber($receivers[$i]->cellphone) == true ? GetPhoneNumber($receivers[$i]->cellphone) : GetPhoneNumber($member->cellphone);
+	$cellphone = isset($receivers[$i]->cellphone) == true && CheckPhoneNumber($receivers[$i]->cellphone) == true ? GetPhoneNumber($receivers[$i]->cellphone) : GetPhoneNumber($member->cellphone);
 	
 	if ($cellphone) $lists[] = array('midx'=>$member->idx,'name'=>$member->name,'cellphone'=>$cellphone);
 }

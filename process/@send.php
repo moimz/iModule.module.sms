@@ -4,7 +4,7 @@
  *
  * 받는사람 목록을 가져온다.
  * 
- * @file /modules/sms/process/@getReceivers.php
+ * @file /modules/sms/process/@send.php
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.0.0.160910
