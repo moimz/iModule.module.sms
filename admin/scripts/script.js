@@ -15,7 +15,7 @@ var Sms = {
 		new Ext.Window({
 			id:"ModuleSmsAddWindow",
 			title:"대상추가",
-			width:300,
+			width:400,
 			modal:true,
 			resizable:false,
 			autoScroll:true,
@@ -27,13 +27,48 @@ var Sms = {
 					bodyPadding:"10 10 5 10",
 					fieldDefaults:{labelAlign:"right",labelWidth:80,anchor:"100%",allowBlank:false},
 					items:[
-						new Ext.form.TextField({
+						new Ext.form.TextArea({
 							fieldLabel:"수신번호",
 							name:"cellphone",
-							emptyText:"000-0000-0000",
+							emptyText:"한줄에 수신번호를 한개씩 입력하세요.",
+							enableKeyEvents:true,
+							listeners:{
+								blur:function(form,value) {
+									var lines = form.getValue().split("\n");
+									for (var i=0, loop=lines.length;i<loop;i++) {
+										var line = lines[i].replace(/-/g,'');
+										
+										if (line.indexOf("02") === 0) {
+											if (line.length == 9) {
+												var number = line.substr(0,2) + "-" + line.substr(2,3) + "-" + line.substr(5,4);
+											} else if (line.length == 10) {
+												var number = line.substr(0,2) + "-" + line.substr(2,4) + "-" + line.substr(6,4);
+											} else {
+												var number = lines[i];
+											}
+										} else if (line.indexOf("0") === 0) {
+											if (line.length == 10) {
+												var number = line.substr(0,3) + "-" + line.substr(3,3) + "-" + line.substr(6,4);
+											} else if (line.length == 11) {
+												var number = line.substr(0,3) + "-" + line.substr(3,4) + "-" + line.substr(7,4);
+											} else {
+												var number = lines[i];
+											}
+										} else {
+											var number = lines[i];
+										}
+										
+										lines[i] = number;
+									}
+									form.setValue(lines.join("\n"));
+								}
+							},
 							validator:function(value) {
-								if (value.length > 0 && value.search(/^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/) == -1) return "휴대전화번호 형식이 올바르지 않습니다.";
-								return true;
+								var lines = value.split("\n");
+								for (var i=0, loop=lines.length;i<loop;i++) {
+									if (lines[i].length > 0 && lines[i].search(/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/) == -1) return "휴대전화번호 형식이 올바르지 않습니다.("+lines[i]+")";
+									return true;
+								}
 							}
 						})
 					]
@@ -44,7 +79,10 @@ var Sms = {
 					text:"추가",
 					handler:function() {
 						if (Ext.getCmp("ModuleSmsAddForm").getForm().isValid() == true) {
-							Ext.getCmp("ModuleSmsWriteReceiverList").getStore().add({midx:0,name:"직접입력",cellphone:Ext.getCmp("ModuleSmsAddForm").getForm().findField("cellphone").getValue()});
+							var lines = Ext.getCmp("ModuleSmsAddForm").getForm().findField("cellphone").getValue().split("\n");
+							for (var i=0, loop=lines.length;i<loop;i++) {
+								Ext.getCmp("ModuleSmsWriteReceiverList").getStore().add({midx:0,name:"직접입력",cellphone:lines[i]});
+							}
 							Ext.getCmp("ModuleSmsAddWindow").close();
 						}
 					}
@@ -145,7 +183,47 @@ var Sms = {
 									fieldLabel:"보내는 번호",
 									name:"sender",
 									emptyText:"000-0000-0000",
-									value:sender ? sender : null
+									value:sender ? sender : null,
+									enableKeyEvents:true,
+									listeners:{
+										blur:function(form,value) {
+											var lines = form.getValue().split("\n");
+											for (var i=0, loop=lines.length;i<loop;i++) {
+												var line = lines[i].replace(/-/g,'');
+												
+												if (line.indexOf("02") === 0) {
+													if (line.length == 9) {
+														var number = line.substr(0,2) + "-" + line.substr(2,3) + "-" + line.substr(5,4);
+													} else if (line.length == 10) {
+														var number = line.substr(0,2) + "-" + line.substr(2,4) + "-" + line.substr(6,4);
+													} else {
+														var number = lines[i];
+													}
+												} else if (line.indexOf("0") === 0) {
+													if (line.length == 10) {
+														var number = line.substr(0,3) + "-" + line.substr(3,3) + "-" + line.substr(6,4);
+													} else if (line.length == 11) {
+														var number = line.substr(0,3) + "-" + line.substr(3,4) + "-" + line.substr(7,4);
+													} else {
+														var number = lines[i];
+													}
+												} else {
+													var number = lines[i];
+												}
+												
+												lines[i] = number;
+											}
+											
+											form.setValue(lines.join("\n"));
+										}
+									},
+									validator:function(value) {
+										var lines = value.split("\n");
+										for (var i=0, loop=lines.length;i<loop;i++) {
+											if (lines[i].length > 0 && lines[i].search(/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/) == -1) return "휴대전화번호 형식이 올바르지 않습니다.("+lines[i]+")";
+											return true;
+										}
+									}
 								}),
 								new Ext.form.TextArea({
 									fieldLabel:"내용",

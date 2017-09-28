@@ -61,6 +61,7 @@ class ModuleSms {
 		 * @see 모듈폴더의 package.json 의 databases 참고
 		 */
 		$this->table = new stdClass();
+		$this->table->admin = 'sms_admin_table';
 		$this->table->send = 'sms_send_table';
 	}
 	
@@ -457,6 +458,22 @@ class ModuleSms {
 		$this->IM->fireEvent('afterDoProcess','sms',$action,$values,$results);
 		
 		return $results;
+	}
+	
+	/**
+	 * 모듈관리자인지 확인한다.
+	 */
+	/**
+	 * 모듈관리자인지 확인한다.
+	 *
+	 * @param int $midx 회원고유번호 (없을 경우 현재 로그인한 사용자)
+	 * @return boolean $isAdmin
+	 */
+	function isAdmin($midx=null) {
+		$midx = $midx == null ? $this->IM->getModule('member')->getLogged() : $midx;
+		if ($this->IM->getModule('member')->isAdmin($midx) == true) return true;
+		
+		return $this->db()->select($this->table->admin)->where('midx',$midx)->has();
 	}
 }
 ?>

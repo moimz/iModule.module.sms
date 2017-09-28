@@ -26,6 +26,17 @@
 	"global":false,
 	"article":false,
 	"databases":{
+		"sms_admin_table":{
+			"columns":{
+				"midx":{
+					"type":"int",
+					"length":11
+				}
+			},
+			"indexes":{
+				"midx":"primary_key"
+			}
+		},
 		"sms_send_table":{
 			"columns":{
 				"idx":{
