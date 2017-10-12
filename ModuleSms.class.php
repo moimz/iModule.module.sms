@@ -329,7 +329,7 @@ class ModuleSms {
 	/**
 	 * 메세지를 전송한다.
 	 */
-	function send($is_split_message=true,$is_fire_event=true) {
+	function send($is_split_message=false,$is_fire_event=true) {
 		if ($this->sender == null) {
 			$this->reset();
 			return 'WRONG_SENDER';
@@ -385,7 +385,6 @@ class ModuleSms {
 			}
 			
 			$this->db()->insert($this->table->send,array('frommidx'=>$values->sender->midx,'tomidx'=>$values->receiver->midx,'sender'=>$values->sender->cellphone,'receiver'=>$values->receiver->cellphone,'message'=>$message,'reg_date'=>time(),'status'=>$results->success == true ? 'SUCCESS' : 'FAIL'))->execute();
-			
 			
 			if ($is_fire_event == true) {
 				$values = new stdClass();

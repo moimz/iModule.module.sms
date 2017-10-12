@@ -60,8 +60,7 @@
 					"length":20
 				},
 				"message":{
-					"type":"varchar",
-					"length":100
+					"type":"text"
 				},
 				"reg_date":{
 					"type":"int",
