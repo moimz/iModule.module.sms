@@ -17,6 +17,9 @@ $lists = $this->db()->select($this->table->send);
 $total = $lists->copy()->count();
 $sort = Request('sort');
 $dir = Request('dir');
+
+$keyword = Request('keyword');
+if ($keyword) $lists->where('message','%'.$keyword.'%','LIKE');
 if ($limit > 0) $lists->limit($start,$limit);
 $lists = $lists->orderBy($sort,$dir)->get();
 

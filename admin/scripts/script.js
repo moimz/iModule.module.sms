@@ -346,7 +346,7 @@ var Sms = {
 								items:[
 									new Ext.form.TextField({
 										fieldLabel:"보내는사람",
-										value:data.receiver_name,
+										value:data.sender_name,
 										flex:1,
 										readOnly:true
 									}),
@@ -364,7 +364,7 @@ var Sms = {
 									new Ext.form.TextField({
 										fieldLabel:"받는사람",
 										name:"name",
-										value:data.sender_name,
+										value:data.receiver_name,
 										flex:1,
 										readOnly:true
 									}),

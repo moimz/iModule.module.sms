@@ -10,6 +10,19 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 				title:Sms.getText("admin/list/title"),
 				border:false,
 				tbar:[
+					new Ext.form.TextField({
+						id:"ModuleSmsSendListKeyword",
+						emptyText:"내용검색",
+						width:140
+					}),
+					new Ext.Button({
+						iconCls:"mi mi-search",
+						handler:function() {
+							Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ModuleSmsSendListKeyword").getValue());
+							Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
+						}
+					}),
+					"-",
 					new Ext.Button({
 						text:Sms.getText("admin/list/addBoard"),
 						iconCls:"fa fa-plus",
