@@ -7,7 +7,8 @@
  * @file /modules/sms/ModuleSms.class.php
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
- * @version 3.0.0.160910
+ * @version 3.0.0
+ * @modified 2017. 11. 22.
  */
 class ModuleSms {
 	/**
@@ -231,6 +232,8 @@ class ModuleSms {
 			if ($string != null) $returnString = $string;
 		}
 		
+		$this->IM->fireEvent('afterGetText',$this->getModule()->getName(),$code,$returnString);
+		
 		/**
 		 * 언어셋 텍스트가 없는경우 iModule 코어에서 불러온다.
 		 */
@@ -446,6 +449,9 @@ class ModuleSms {
 	function doProcess($action) {
 		$results = new stdClass();
 		
+		$values = (object)get_defined_vars();
+		$this->IM->fireEvent('beforeDoProcess',$this->getModule()->getName(),$action,$values);
+		
 		/**
 		 * 모듈의 process 폴더에 $action 에 해당하는 파일이 있을 경우 불러온다.
 		 */
@@ -453,15 +459,13 @@ class ModuleSms {
 			INCLUDE $this->getModule()->getPath().'/process/'.$action.'.php';
 		}
 		
+		unset($values);
 		$values = (object)get_defined_vars();
-		$this->IM->fireEvent('afterDoProcess','sms',$action,$values,$results);
+		$this->IM->fireEvent('afterDoProcess',$this->getModule()->getName(),$action,$values,$results);
 		
 		return $results;
 	}
 	
-	/**
-	 * 모듈관리자인지 확인한다.
-	 */
 	/**
 	 * 모듈관리자인지 확인한다.
 	 *
