@@ -30,52 +30,63 @@
 			"columns":{
 				"midx":{
 					"type":"int",
-					"length":11
+					"length":11,
+					"comment":"관리자"
 				}
 			},
 			"indexes":{
 				"midx":"primary_key"
-			}
+			},
+			"comment":"SMS모듈접근권한관리"
 		},
 		"sms_send_table":{
 			"columns":{
 				"idx":{
 					"type":"int",
-					"length":11
+					"length":11,
+					"comment":"고유값"
 				},
 				"frommidx":{
 					"type":"int",
-					"length":11
+					"length":11,
+					"comment":"발송자"
 				},
 				"tomidx":{
 					"type":"int",
-					"length":11
+					"length":11,
+					"comment":"수신자"
 				},
 				"sender":{
 					"type":"varchar",
-					"length":20
+					"length":20,
+					"comment":"발송번호"
 				},
 				"receiver":{
 					"type":"varchar",
-					"length":20
+					"length":20,
+					"comment":"수신번호"
 				},
 				"message":{
-					"type":"text"
+					"type":"text",
+					"comment":"발송메시지"
 				},
 				"reg_date":{
 					"type":"int",
-					"length":11
+					"length":11,
+					"comment":"발송일"
 				},
 				"status":{
 					"type":"enum",
 					"length":"'SUCCESS','FAIL'",
-					"default":"SUCCESS"
+					"default":"SUCCESS",
+					"comment":"전송상태"
 				}
 			},
 			"indexes":{
 				"idx":"primary_key"
 			},
-			"auto_increment":"idx"
+			"auto_increment":"idx",
+			"comment":"SMS발송관리"
 		}
 	}
 }
