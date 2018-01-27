@@ -10,14 +10,81 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 				title:Sms.getText("admin/list/title"),
 				border:false,
 				tbar:[
+					new Ext.Button({
+						text:"전체기간",
+						iconCls:"fa fa fa-check-square-o",
+						pressed:true,
+						enableToggle:true,
+						handler:function(button) {
+							if (button.pressed === true) {
+								button.setIconCls("fa fa fa-check-square-o");
+								Ext.getCmp("ModuleSmsSendListStartDate").disable();
+								Ext.getCmp("ModuleSmsSendListEndDate").disable();
+								Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("start_date","");
+								Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("end_date","");
+								Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
+							} else {
+								button.setIconCls("fa fa fa-square-o");
+								Ext.getCmp("ModuleSmsSendListStartDate").enable();
+								Ext.getCmp("ModuleSmsSendListEndDate").enable();
+								Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("start_date",moment(Ext.getCmp("ModuleSmsSendListStartDate").getValue()).format("YYYY-MM-DD"));
+								Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("end_date",moment(Ext.getCmp("ModuleSmsSendListEndDate").getValue()).format("YYYY-MM-DD"));
+								Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
+							}
+						}
+					}),
+					new Ext.form.DateField({
+						id:"ModuleSmsSendListStartDate",
+						width:120,
+						value:moment().format("YYYY-MM-01"),
+						format:"Y-m-d",
+						disabled:true,
+						listeners:{
+							change:function(form,value) {
+								Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("start_date",moment(value).format("YYYY-MM-DD"));
+								Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
+							}
+						}
+					}),
+					new Ext.form.DisplayField({
+						value:"~"
+					}),
+					new Ext.form.DateField({
+						id:"ModuleSmsSendListEndDate",
+						width:120,
+						value:moment().add(1,"month").date(0).format("YYYY-MM-DD"),
+						format:"Y-m-d",
+						disabled:true,
+						listeners:{
+							change:function(form,value) {
+								Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("end_date",moment(value).format("YYYY-MM-DD"));
+								Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
+							}
+						}
+					}),
+					"-",
+					new Ext.form.ComboBox({
+						id:"ModuleSmsSendListKeycode",
+						visibility:"calendar,application",
+						store:new Ext.data.ArrayStore({
+							fields:["display","value"],
+							data:[["발송자","sender"],["발송번호","sender_number"],["수신자","receiver"],["수신번호","receiver_number"],["내용","message"]]
+						}),
+						width:100,
+						editable:false,
+						displayField:"display",
+						valueField:"value",
+						value:"message"
+					}),
 					new Ext.form.TextField({
 						id:"ModuleSmsSendListKeyword",
-						emptyText:"내용검색",
+						emptyText:"검색어",
 						width:140
 					}),
 					new Ext.Button({
 						iconCls:"mi mi-search",
 						handler:function() {
+							Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("keycode",Ext.getCmp("ModuleSmsSendListKeycode").getValue());
 							Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ModuleSmsSendListKeyword").getValue());
 							Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
 						}
