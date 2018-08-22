@@ -18,10 +18,11 @@ $dir = Request('dir');
 $start_date = Request('start_date') ? strtotime(Request('start_date')) : 0;
 $end_date = Request('end_date') ? strtotime(Request('end_date')) : time();
 
+$mMember = $this->IM->getModule('member');
 $keycode = Request('keycode');
 $keyword = Request('keyword');
 
-$lists = $this->db()->select($this->table->send)->where('reg_date',$start_date,'>=')->where('reg_date',$end_date,'<');
+$lists = $this->db()->select($this->table->send.' s','s.*')->join($mMember->getTable('member').' sm','sm.idx=s.frommidx','LEFT')->join($mMember->getTable('member').' rm','rm.idx=s.tomidx','LEFT')->where('s.reg_date',$start_date,'>=')->where('s.reg_date',$end_date,'<');
 $total = $lists->copy()->count();
 
 if ($keyword) {
@@ -43,7 +44,14 @@ if ($keyword) {
 }
 
 if ($limit > 0) $lists->limit($start,$limit);
-$lists = $lists->orderBy($sort,$dir)->get();
+if ($sort == 'sender_name') {
+	$lists->orderBy('sm.name',$dir);
+} elseif ($sort == 'receiver_name') {
+	$lists->orderBy('rm.name',$dir);
+} else {
+	$lists->orderBy('s.'.$sort,$dir);
+}
+$lists = $lists->get();
 
 for ($i=0, $loop=count($lists);$i<$loop;$i++) {
 	$lists[$i]->receiver_name = $lists[$i]->tomidx == 0 ? '비회원' : $this->IM->getModule('member')->getMember($lists[$i]->tomidx)->name;
