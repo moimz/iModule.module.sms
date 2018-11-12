@@ -5,8 +5,9 @@
  * 
  * @file /modules/sms/admin/scripts/script.js
  * @author Arzz (arzz@arzz.com)
- * @license MIT License
- * @version 3.0.0.160910
+ * @license GPLv3
+ * @version 3.0.0
+ * @modified 2018. 11. 13.
  */
 var Sms = {
 	add:function() {

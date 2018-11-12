@@ -1,3 +1,17 @@
+<?php
+/**
+ * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
+ *
+ * SMS모듈 관리자패널을 구성한다.
+ * 
+ * @file /modules/sms/admin/index.php
+ * @author Arzz (arzz@arzz.com)
+ * @license GPLv3
+ * @version 3.0.0
+ * @modified 2018. 11. 13.
+ */
+if (defined('__IM__') == false) exit;
+?>
 <script>
 Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 	new Ext.TabPanel({
