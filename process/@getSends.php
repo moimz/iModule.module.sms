@@ -24,12 +24,13 @@ $keycode = Request('keycode');
 $keyword = Request('keyword');
 
 $lists = $this->db()->select($this->table->send.' s','s.*')->join($mMember->getTable('member').' sm','sm.idx=s.frommidx','LEFT')->join($mMember->getTable('member').' rm','rm.idx=s.tomidx','LEFT')->where('s.reg_date',$start_date,'>=')->where('s.reg_date',$end_date,'<');
-$total = $lists->copy()->count();
 
 if ($keyword) {
-	if ($keyword == 'sender_number') {
+	if ($keycode == 'sender_number') {
+		$keyword = str_replace('-','',$keyword);
 		$lists->where('sender','%'.$keyword.'%','LIKE');
-	} elseif ($keyword == 'receiver_number') {
+	} elseif ($keycode == 'receiver_number') {
+		$keyword = str_replace('-','',$keyword);
 		$lists->where('sender','%'.$keyword.'%','LIKE');
 	} elseif ($keycode == 'message') {
 		$lists->where('message','%'.$keyword.'%','LIKE');
@@ -37,12 +38,14 @@ if ($keyword) {
 		$mMember = $this->IM->getModule('member');
 		$members = $mMember->db()->select($mMember->getTable('member'),'idx')->where('name','%'.$keyword.'%','LIKE')->get('idx');
 		if (count($members) == 0) {
-			$lists->where('idx',0);
+			$lists->where(0);
 		} else {
 			$lists->where($keycode == 'sender' ? 'frommidx' : 'tomidx',$members,'IN');
 		}
 	}
 }
+
+$total = $lists->copy()->count();
 
 if ($limit > 0) $lists->limit($start,$limit);
 if ($sort == 'sender_name') {
