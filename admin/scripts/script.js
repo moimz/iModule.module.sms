@@ -1,5 +1,5 @@
 /**
- * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodule.kr)
+ * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
  *
  * SMS 관리자의 UI/UX 기능을 제어한다.
  * 

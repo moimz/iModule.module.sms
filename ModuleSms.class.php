@@ -1,6 +1,6 @@
 <?php
 /**
- * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodule.kr)
+ * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
  *
  * SMS발송과 관련된 모든 기능을 제어한다.
  * 
@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.0.0
- * @modified 2017. 11. 22.
+ * @modified 2018. 11. 13.
  */
 class ModuleSms {
 	/**

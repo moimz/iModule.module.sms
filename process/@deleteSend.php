@@ -1,6 +1,6 @@
 <?php
 /**
- * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodule.kr)
+ * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
  *
  * 발송기록을 삭제한다.
  * 

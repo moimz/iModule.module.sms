@@ -9,35 +9,29 @@
 		"name":"Arzz",
 		"email":"arzz@arzz.com"
 	},
-	"homepage":"https://www.imodule.kr",
-	"versionChecker":"http://www.moimz.com/ko/api/moimz/getLatest",
+	"homepage":"https://www.imodules.io",
+	"versionChecker":"https://api.moimz.com/download/latest",
 	"description":{
 		"ko":"SMS 발송합니다."
 	},
 	"dependencies":{
-		"core":"3.0.0",
-		"attachment":"3.0.0",
-		"wysiwyg":"3.0.0",
-		"keyword":"3.0.0"
+		"core":"3.0.0"
 	},
 	"language":"ko",
 	"admin":true,
-	"context":false,
-	"global":false,
-	"article":false,
 	"databases":{
 		"sms_admin_table":{
 			"columns":{
 				"midx":{
 					"type":"int",
 					"length":11,
-					"comment":"관리자"
+					"comment":"회원고유번호"
 				}
 			},
 			"indexes":{
 				"midx":"primary_key"
 			},
-			"comment":"SMS모듈접근권한관리"
+			"comment":"SMS 관리자 테이블"
 		},
 		"sms_send_table":{
 			"columns":{
@@ -49,12 +43,12 @@
 				"frommidx":{
 					"type":"int",
 					"length":11,
-					"comment":"발송자"
+					"comment":"발송회원고유값"
 				},
 				"tomidx":{
 					"type":"int",
 					"length":11,
-					"comment":"수신자"
+					"comment":"수신회원고유값"
 				},
 				"sender":{
 					"type":"varchar",
@@ -86,7 +80,7 @@
 				"idx":"primary_key"
 			},
 			"auto_increment":"idx",
-			"comment":"SMS발송관리"
+			"comment":"SMS 발송내역 테이블"
 		}
 	}
 }
