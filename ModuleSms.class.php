@@ -365,7 +365,7 @@ class ModuleSms {
 		
 		while (true) {
 			if ($is_split_message == true && $this->getMessageLength($oMessage) > 80) {
-				$message = $this->getCutMessage($oMessage,80);
+				$message = $this->getCutMessage($oMessage,9999999999999); // 원래 80이었는데 제한 해제하도록. 주석처리하려했으나 message 할당을 여기서밖에 안하니 그냥 숫자변경함
 				$oMessage = trim(str_replace($message,'',$oMessage));
 			} else {
 				$message = $oMessage;
