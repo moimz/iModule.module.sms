@@ -19,6 +19,16 @@
 	},
 	"language":"ko",
 	"admin":true,
+	"configs":{
+		"sender":{
+			"type":"string",
+			"default":""
+		},
+		"lms":{
+			"type":"boolean",
+			"default":true
+		}
+	},
 	"databases":{
 		"sms_admin_table":{
 			"columns":{

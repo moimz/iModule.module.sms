@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.0.0
- * @modified 2018. 11. 13.
+ * @modified 2019. 4. 3.
  */
 class ModuleSms {
 	/**
@@ -128,26 +128,14 @@ class ModuleSms {
 	}
 	
 	/**
-	 * [코어] 알림메세지를 구성한다.
-	 *
-	 * @param string $code 알림코드
-	 * @param int $fromcode 알림이 발생한 대상의 고유값
-	 * @param array $content 알림데이터
-	 * @return string $push 알림메세지
-	 */
-	function getPush($code,$fromcode,$content) {
-		return null;
-	}
-	
-	/**
 	 * [사이트관리자] 모듈 설정패널을 구성한다.
 	 *
 	 * @return string $panel 설정패널 HTML
-	 *
+	 */
 	function getConfigPanel() {
 		/**
 		 * 설정패널 PHP에서 iModule 코어클래스와 모듈코어클래스에 접근하기 위한 변수 선언
-		 *
+		 */
 		$IM = $this->IM;
 		$Module = $this->getModule();
 		
@@ -158,7 +146,6 @@ class ModuleSms {
 		
 		return $panel;
 	}
-	*/
 	
 	/**
 	 * [사이트관리자] 모듈 관리자패널 구성한다.
@@ -332,10 +319,16 @@ class ModuleSms {
 	/**
 	 * 메세지를 전송한다.
 	 */
-	function send($is_split_message=false,$is_fire_event=true) {
+	function send($is_fire_event=true) {
 		if ($this->sender == null) {
-			$this->reset();
-			return 'WRONG_SENDER';
+			if ($this->getModule()->getConfig('sender')) {
+				$this->sender = new stdClass();
+				$this->sender->midx = 0;
+				$this->sender->cellphone = $this->getModule()->getConfig('sender');
+			} else {
+				$this->reset();
+				return 'WRONG_SENDER';
+			}
 		}
 		
 		if ($this->receiver == null) {
@@ -364,9 +357,9 @@ class ModuleSms {
 		$oMessage = trim($this->message);
 		
 		while (true) {
-			if ($is_split_message == true && $this->getMessageLength($oMessage) > 80) {
+			if ($this->getModule()->getConfig('lms') == false && $this->getMessageLength($oMessage) > 80) {
 				$message = $this->getCutMessage($oMessage,80);
-				$oMessage = trim(str_replace($message,'',$oMessage));
+				$oMessage = trim(preg_replace('/^'.GetString($message,'reg').'/','',$oMessage));
 			} else {
 				$message = $oMessage;
 				$oMessage = '';
