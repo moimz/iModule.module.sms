@@ -158,6 +158,11 @@ class ModuleSms {
 		 */
 		$IM = $this->IM;
 		$Module = $this;
+
+		/**
+		 * 회원모듈 관리자를 불러온다.
+		 */
+		$this->IM->getModule('admin')->loadModule('member');
 		
 		ob_start();
 		INCLUDE $this->getModule()->getPath().'/admin/index.php';
