@@ -234,7 +234,124 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 						menu.showAt(e.getXY());
 					}
 				}
-			})
+			}),
+			<?php if ($this->IM->getModule('member')->isAdmin() == true) { ?>
+			new Ext.grid.Panel({
+				id:"ModuleSmsAdminList",
+				iconCls:"xi xi-crown",
+				title:"관리자 관리",
+				border:false,
+				tbar:[
+					new Ext.Button({
+						text:"관리자 추가",
+						iconCls:"xi xi-form",
+						handler:function() {
+							Member.search(function(member) {
+								Ext.Msg.show({title:Admin.getText("alert/info"),msg:member.name+"님을 관리자로 추가하시겠습니까?",buttons:Ext.Msg.OKCANCEL,icon:Ext.Msg.QUESTION,fn:function(button) {
+									if (button == "ok") {
+										Ext.Msg.wait(Admin.getText("action/working"),Admin.getText("action/wait"));
+										$.send(ENV.getProcessUrl("sms","@saveAdmin"),{midx:member.idx},function(result) {
+											if (result.success == true) {
+												Ext.Msg.show({title:Admin.getText("alert/info"),msg:Admin.getText("action/worked"),buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
+													Ext.getCmp("ModuleSmsAdminList").getStore().reload();
+												}});
+											} else {
+												Ext.Msg.show({title:Admin.getText("alert/error"),msg:result.message,buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+											}
+											return false;
+										});
+									}
+								}});
+							});
+						}
+					})
+				],
+				store:new Ext.data.JsonStore({
+					proxy:{
+						type:"ajax",
+						simpleSortMode:true,
+						url:ENV.getProcessUrl("sms","@getAdmins"),
+						extraParams:{},
+						reader:{type:"json"}
+					},
+					remoteSort:false,
+					sorters:[{property:"name",direction:"ASC"}],
+					autoLoad:true,
+					pageSize:0,
+					fields:[],
+					listeners:{
+						load:function(store,records,success,e) {
+							if (success == false) {
+								if (e.getError()) {
+									Ext.Msg.show({title:Admin.getText("alert/error"),msg:e.getError(),buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+								} else {
+									Ext.Msg.show({title:Admin.getText("alert/error"),msg:Admin.getErrorText("LOAD_DATA_FAILED"),buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+								}
+							}
+						}
+					}
+				}),
+				columns:[{
+					text:"이름",
+					dataIndex:"name",
+					sortable:true,
+					width:80
+				},{
+					text:"이메일",
+					dataIndex:"email",
+					sortable:true,
+					width:140,
+					flex:1
+				}],
+				selModel:new Ext.selection.CheckboxModel(),
+				bbar:[
+					new Ext.Button({
+						iconCls:"x-tbar-loading",
+						handler:function() {
+							Ext.getCmp("ModuleSmsAdminList").getStore().reload();
+						}
+					}),
+					"->",
+					{xtype:"tbtext",text:Admin.getText("text/grid_help")}
+				],
+				listeners:{
+					itemdblclick:function(grid,record) {
+						Sms.admin.add(record.data.midx);
+					},
+					itemcontextmenu:function(grid,record,item,index,e) {
+						var menu = new Ext.menu.Menu();
+						
+						menu.add('<div class="x-menu-title">'+record.data.name+'</div>');
+						
+						menu.add({
+							iconCls:"xi xi-trash",
+							text:"삭제",
+							handler:function() {
+								Ext.Msg.show({title:Admin.getText("alert/info"),msg:"관리자를 삭제하시겠습니까?<br>해당 관리자는 더이상 관리할 수 없습니다.",buttons:Ext.Msg.OKCANCEL,icon:Ext.Msg.QUESTION,fn:function(button) {
+									if (button == "ok") {
+										Ext.Msg.wait(Admin.getText("action/working"),Admin.getText("action/wait"));
+										$.send(ENV.getProcessUrl("sms","@deleteAdmin"),{midx:record.data.midx},function(result) {
+											if (result.success == true) {
+												Ext.Msg.show({title:Admin.getText("alert/info"),msg:Admin.getText("action/worked"),buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
+													Ext.getCmp("ModuleSmsAdminList").getStore().reload();
+												}});
+											} else {
+												Ext.Msg.show({title:Admin.getText("alert/error"),msg:result.message,buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+											}
+											return false;
+										});
+									}
+								}});
+							}
+						});
+						
+						e.stopEvent();
+						menu.showAt(e.getXY());
+					}
+				}
+			}),
+			<?php } ?>
+			null
 		]
 	})
 ); });
