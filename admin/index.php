@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license GPLv3
  * @version 3.0.0
- * @modified 2019. 2. 6.
+ * @modified 2019. 7. 19.
  */
 if (defined('__IM__') == false) exit;
 ?>
@@ -21,6 +21,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 		items:[
 			new Ext.grid.Panel({
 				id:"ModuleSmsSendList",
+				iconCls:"fa fa-bars",
 				title:Sms.getText("admin/list/title"),
 				border:false,
 				tbar:[
@@ -244,7 +245,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 				tbar:[
 					new Ext.Button({
 						text:"관리자 추가",
-						iconCls:"xi xi-form",
+						iconCls:"mi mi-plus",
 						handler:function() {
 							Member.search(function(member) {
 								Ext.Msg.show({title:Admin.getText("alert/info"),msg:member.name+"님을 관리자로 추가하시겠습니까?",buttons:Ext.Msg.OKCANCEL,icon:Ext.Msg.QUESTION,fn:function(button) {
@@ -295,7 +296,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 					text:"이름",
 					dataIndex:"name",
 					sortable:true,
-					width:80
+					width:100
 				},{
 					text:"이메일",
 					dataIndex:"email",
@@ -325,7 +326,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 						
 						menu.add({
 							iconCls:"xi xi-trash",
-							text:"삭제",
+							text:"관리자 삭제",
 							handler:function() {
 								Ext.Msg.show({title:Admin.getText("alert/info"),msg:"관리자를 삭제하시겠습니까?<br>해당 관리자는 더이상 관리할 수 없습니다.",buttons:Ext.Msg.OKCANCEL,icon:Ext.Msg.QUESTION,fn:function(button) {
 									if (button == "ok") {

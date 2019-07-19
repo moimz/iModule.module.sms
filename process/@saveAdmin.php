@@ -1,6 +1,6 @@
 <?php
 /**
- * 이 파일은 iModule 기반으로 하는 SMS 모듈 입니다. (https://www.imodule.kr)
+ * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
  *
  * 관리자를 저장한다.
  *
@@ -12,8 +12,7 @@
  */
 if (defined('__IM__') == false) exit;
 
-$midx = Request('midx');
-
+$midx = Param('midx');
 
 $this->db()->replace($this->table->admin,array('midx'=>$midx))->execute();
 $results->success = true;

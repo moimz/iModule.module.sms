@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.0.0
- * @modified 2019. 4. 3.
+ * @modified 2019. 7. 19.
  */
 class ModuleSms {
 	/**
