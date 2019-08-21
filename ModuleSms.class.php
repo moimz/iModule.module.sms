@@ -611,7 +611,7 @@ class ModuleSms {
 		$oMessage = trim($this->message);
 		
 		while (true) {
-			if ($this->getModule()->getConfig('lms') == false && $this->getMessageLength($oMessage) > 80) {
+			if ($this->getModule()->getConfig('use_lms') == false && $this->getMessageLength($oMessage) > 80) {
 				$message = $this->getCutMessage($oMessage,80);
 				$oMessage = trim(preg_replace('/^'.GetString($message,'reg').'/','',$oMessage));
 			} else {
