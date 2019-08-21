@@ -7,8 +7,8 @@
  * @file /modules/sms/admin/configs.php
  * @author Arzz (arzz@arzz.com)
  * @license GPLv3
- * @version 3.0.0
- * @modified 2019. 4. 4.
+ * @version 3.1.0
+ * @modified 2019. 8. 21.
  */
 if (defined('__IM__') == false) exit;
 ?>
@@ -21,19 +21,21 @@ new Ext.form.Panel({
 	fieldDefaults:{labelAlign:"right",labelWidth:100,anchor:"100%",allowBlank:false},
 	items:[
 		new Ext.form.FieldSet({
-			title:"기본설정",
+			title:Sms.getText("admin/configs/form/default_setting"),
 			items:[
+				Admin.templetField(Sms.getText("admin/configs/form/templet"),"templet","module","sms",false),
 				new Ext.form.TextField({
-					fieldLabel:"기본발송번호",
+					fieldLabel:Sms.getText("admin/configs/form/default_sender"),
 					name:"sender",
 					emptyValue:"000-000-0000"
 				}),
 				new Ext.form.Checkbox({
-					fieldLabel:"LMS발송여부",
-					name:"lms",
-					boxLabel:"문자길이가 긴 경우 LMS으로 발송합니다.",
+					fieldLabel:Sms.getText("admin/configs/form/use_lms"),
+					name:"use_lms",
+					boxLabel:Sms.getText("admin/configs/form/use_lms_help"),
 					uncheckedValue:"",
-					afterBodyEl:'<div class="x-form-help">LMS으로 발송을 하지 않을 경우 80자로 끊어서 발송합니다.</div>'
+					checked:true,
+					afterBodyEl:'<div class="x-form-help">'+Sms.getText("admin/configs/form/use_lms_help_default")+'</div>'
 				})
 			]
 		})

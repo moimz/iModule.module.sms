@@ -4,7 +4,7 @@
 	"title":{
 		"ko":"SMS"
 	},
-	"version":"3.0.0",
+	"version":"3.1.0",
 	"author":{
 		"name":"Arzz",
 		"email":"arzz@arzz.com"
@@ -19,12 +19,18 @@
 	},
 	"language":"ko",
 	"admin":true,
+	"global":true,
+	"context":true,
 	"configs":{
+		"templet":{
+			"type":"templet",
+			"default":"default"
+		},
 		"sender":{
 			"type":"string",
 			"default":""
 		},
-		"lms":{
+		"use_lms":{
 			"type":"boolean",
 			"default":true
 		}

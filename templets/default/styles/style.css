@@ -1,0 +1,36 @@
+/**
+ * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
+ *
+ * SMS모듈 기본템플릿이 컨테이너로 열렸을 때 스타일정의
+ *
+ * @file /modules/sms/templets/default/styles/style.css
+ * @author Arzz (arzz@arzz.com)
+ * @license MIT License
+ * @version 3.1.0
+ * @modified 2019. 8. 21.
+ */
+div[data-module=sms] div[data-role=button] {padding-top:20px;}
+
+@media (min-width:500px) {
+	div[data-module=sms] ul[data-role=form] {list-style:none; border-top:2px solid transparent; min-width:100%;}
+	div[data-module=sms] ul[data-role=form].red {border-top-color:#f44336;}
+	div[data-module=sms] ul[data-role=form].black {border-top-color:#222;}
+	
+	div[data-module=sms] ul[data-role=form] > li {display:table; width:100%; min-height:60px; table-layout:fixed; box-sizing:border-box;}
+	div[data-module=sms] ul[data-role=form].inner > li {border-bottom:1px solid #e3e4e5;}
+	div[data-module=sms] ul[data-role=form].outer > li {border-left:1px solid #e3e4e5; border-right:1px solid #e3e4e5;}
+	
+	div[data-module=sms] ul[data-role=form] > li > label {display:table-cell; width:100px !important; vertical-align:top; line-height:20px; background:#f4f4f4; padding:20px 0px 20px 20px; font-weight:bold; font-size:14px;}
+	div[data-module=sms] ul[data-role=form] > li > label:after {content:"";}
+	div[data-module=sms] ul[data-role=form] > li > label.required:after {color:#F44336; content:" *";}
+	div[data-module=sms] ul[data-role=form] > li > label.small {width:100px;}
+	div[data-module=sms] ul[data-role=form] > li > div {display:table-cell; width:100%; padding:10px 10px 10px 0px; line-height:1; vertical-align:top;}
+	div[data-module=sms] ul[data-role=form] > li > div:last-child {padding-right:0px;}
+	div[data-module=sms] ul[data-role=form] > li > label + div {padding-left:10px;}
+	div[data-module=sms] ul[data-role=form] > li > div > div[data-role=text] {display:table; padding:5px 0px; min-height:30px; line-height:30px; font-size:14px;}
+	div[data-module=sms] ul[data-role=form] > li > div > div[data-role=text] > div {display:table-cell; vertical-align:middle; line-height:1.6;}
+	div[data-module=sms] ul[data-role=form] > li > div > div[data-role=button] {margin-top:0; text-align:left; padding:0px;}
+	div[data-module=sms] ul[data-role=form] > li > div > div[data-role=button] > button {height:40px; line-height:40px; padding:0px 15px; margin:0px;}
+	div[data-module=sms] ul[data-role=form] > li > div div[data-role=help] {margin-bottom:0;}
+	div[data-module=sms] ul[data-role=form] > li > div div[data-role=button] {text-align:left;}
+}

@@ -7,7 +7,7 @@
  * @file /modules/sms/admin/index.php
  * @author Arzz (arzz@arzz.com)
  * @license GPLv3
- * @version 3.0.0
+ * @version 3.1.0
  * @modified 2019. 7. 19.
  */
 if (defined('__IM__') == false) exit;
