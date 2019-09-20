@@ -26,7 +26,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 				border:false,
 				tbar:[
 					new Ext.Button({
-						text:"전체기간",
+						text:Sms.getText("admin/list/all_period"),
 						iconCls:"fa fa fa-check-square-o",
 						pressed:true,
 						enableToggle:true,
@@ -83,7 +83,13 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 						visibility:"calendar,application",
 						store:new Ext.data.ArrayStore({
 							fields:["display","value"],
-							data:[["발송자","sender"],["발송번호","sender_number"],["수신자","receiver"],["수신번호","receiver_number"],["내용","message"]]
+							data:(function() {
+								var datas = [];
+								for (var field in Sms.getText("admin/list/keyfields")) {
+									datas.push([Sms.getText("admin/list/keyfields/"+field),field]);
+								}
+								return datas;
+							})()
 						}),
 						width:100,
 						editable:false,
@@ -91,29 +97,21 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 						valueField:"value",
 						value:"message"
 					}),
-					new Ext.form.TextField({
-						id:"ModuleSmsSendListKeyword",
-						emptyText:"검색어",
-						width:140
-					}),
-					new Ext.Button({
-						iconCls:"mi mi-search",
-						handler:function() {
-							Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("keycode",Ext.getCmp("ModuleSmsSendListKeycode").getValue());
-							Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ModuleSmsSendListKeyword").getValue());
-							Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
-						}
+					Admin.searchField("ModuleSmsSendListKeyword",180,Sms.getText("admin/list/keyword"),function(keyword) {
+						Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("keycode",Ext.getCmp("ModuleSmsSendListKeycode").getValue());
+						Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ModuleSmsSendListKeyword").getValue());
+						Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
 					}),
 					"-",
 					new Ext.Button({
-						text:Sms.getText("admin/list/addBoard"),
-						iconCls:"fa fa-plus",
+						text:Sms.getText("admin/list/send"),
+						iconCls:"mi mi-plus",
 						handler:function() {
 							Sms.write();
 						}
 					}),
 					new Ext.Button({
-						text:"선택기록삭제",
+						text:Sms.getText("admin/list/delete"),
 						iconCls:"mi mi-trash",
 						handler:function() {
 							Sms.list.delete();
@@ -213,7 +211,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 					itemcontextmenu:function(grid,record,item,index,e) {
 						var menu = new Ext.menu.Menu();
 						
-						menu.add('<div class="x-menu-title">'+record.data.receiver_name+'('+record.data.receiver+')</div>');
+						menu.addTitle(record.data.receiver_name+"("+record.data.receiver+")");
 						
 						menu.add({
 							iconCls:"xi xi-form",
