@@ -1,6 +1,9 @@
 {
 	"text":{
 	},
+	"context":{
+		"send":"SMS발송"
+	},
 	"error":{
 	},
 	"status":{
@@ -8,6 +11,16 @@
 		"FAIL":"실패"
 	},
 	"admin":{
+		"configs":{
+			"form":{
+				"default_setting":"기본설정",
+				"templet":"템플릿",
+				"default_sender":"기본발송번호",
+				"use_lms":"LMS사용",
+				"use_lms_help":"문자길이가 긴 경우 LMS으로 발송합니다.",
+				"use_lms_help_default":"LMS으로 발송을 하지 않을 경우 80자로 끊어서 발송합니다."
+			}
+		},
 		"list":{
 			"title":"SMS발송기록",
 			"addBoard":"SMS발송",

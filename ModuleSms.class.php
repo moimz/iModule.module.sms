@@ -7,8 +7,8 @@
  * @file /modules/sms/ModuleSms.class.php
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
- * @version 3.0.0
- * @modified 2019. 4. 3.
+ * @version 3.1.0
+ * @modified 2019. 8. 21.
  */
 class ModuleSms {
 	/**
@@ -43,6 +43,11 @@ class ModuleSms {
 	private $message = null;
 	
 	/**
+	 * 기본 URL (다른 모듈에서 호출되었을 경우에 사용된다.)
+	 */
+	private $baseUrl = null;
+	
+	/**
 	 * class 선언
 	 *
 	 * @param iModule $IM iModule 코어클래스
@@ -64,6 +69,13 @@ class ModuleSms {
 		$this->table = new stdClass();
 		$this->table->admin = 'sms_admin_table';
 		$this->table->send = 'sms_send_table';
+		
+		/**
+		 * SMS 발송관련 기능을 제공하기 위한 자바스크립트를 로딩한다.
+		 */
+		if (defined('__IM_ADMIN__') == false) {
+			$this->IM->addHeadResource('script',$this->getModule()->getDir().'/scripts/script.js');
+		}
 	}
 	
 	/**
@@ -97,32 +109,81 @@ class ModuleSms {
 	}
 	
 	/**
+	 * URL 을 가져온다.
+	 *
+	 * @param string $view
+	 * @param string $idx
+	 * @return string $url
+	 */
+	function getUrl($view=null,$idx=null) {
+		$url = $this->baseUrl ? $this->baseUrl : $this->IM->getUrl(null,null,false);
+		
+		$view = $view === null ? $this->getView($this->baseUrl) : $view;
+		if ($view == null || $view == false) return $url;
+		$url.= '/'.$view;
+		
+		$idx = $idx === null ? $this->getIdx($this->baseUrl) : $idx;
+		if ($idx == null || $idx == false) return $url;
+		
+		return $url.'/'.$idx;
+	}
+	
+	/**
+	 * 다른모듈에서 호출된 경우 baseUrl 을 설정한다.
+	 *
+	 * @param string $url
+	 * @return $this
+	 */
+	function setUrl($url) {
+		$this->baseUrl = $this->IM->getUrl(null,null,$url,false);
+		return $this;
+	}
+	
+	/**
+	 * view 값을 가져온다.
+	 *
+	 * @return string $view
+	 */
+	function getView() {
+		return $this->IM->getView($this->baseUrl);
+	}
+	
+	/**
+	 * idx 값을 가져온다.
+	 *
+	 * @return string $idx
+	 */
+	function getIdx() {
+		return $this->IM->getIdx($this->baseUrl);
+	}
+	
+	/**
 	 * [코어] 사이트 외부에서 현재 모듈의 API를 호출하였을 경우, API 요청을 처리하기 위한 함수로 API 실행결과를 반환한다.
 	 * 소스코드 관리를 편하게 하기 위해 각 요쳥별로 별도의 PHP 파일로 관리한다.
 	 *
+	 * @param string $protocol API 호출 프로토콜 (get, post, put, delete)
 	 * @param string $api API명
+	 * @param any $idx API 호출대상 고유값
+	 * @param object $params API 호출시 전달된 파라메터
 	 * @return object $datas API처리후 반환 데이터 (해당 데이터는 /api/index.php 를 통해 API호출자에게 전달된다.)
 	 * @see /api/index.php
 	 */
-	function getApi($api) {
+	function getApi($protocol,$api,$idx=null,$params=null) {
 		$data = new stdClass();
 		
-		/**
-		 * 이벤트를 호출한다.
-		 */
-		$this->IM->fireEvent('beforeGetApi','member',$api,$values,null);
+		$values = (object)get_defined_vars();
+		$this->IM->fireEvent('beforeGetApi',$this->getModule()->getName(),$api,$values);
 		
 		/**
 		 * 모듈의 api 폴더에 $api 에 해당하는 파일이 있을 경우 불러온다.
 		 */
-		if (is_file($this->getModule()->getPath().'/api/'.$api.'.php') == true) {
-			INCLUDE $this->getModule()->getPath().'/api/'.$api.'.php';
+		if (is_file($this->getModule()->getPath().'/api/'.$api.'.'.$protocol.'.php') == true) {
+			INCLUDE $this->getModule()->getPath().'/api/'.$api.'.'.$protocol.'.php';
 		}
 		
-		/**
-		 * 이벤트를 호출한다.
-		 */
-		$this->IM->fireEvent('afterGetApi','member',$api,$values,$data);
+		unset($values);
+		$values = (object)get_defined_vars();
+		$this->IM->fireEvent('afterGetApi',$this->getModule()->getName(),$api,$values,$data);
 		
 		return $data;
 	}
@@ -170,6 +231,53 @@ class ModuleSms {
 		ob_end_clean();
 		
 		return $panel;
+	}
+	
+	/**
+	 * [사이트관리자] 모듈의 전체 컨텍스트 목록을 반환한다.
+	 *
+	 * @return object $lists 전체 컨텍스트 목록
+	 */
+	function getContexts() {
+		$lists = array();
+		foreach ($this->getText('context') as $context=>$title) {
+			$lists[] = array('context'=>$context,'title'=>$title);
+		}
+		
+		return $lists;
+	}
+	
+	/**
+	 * 특정 컨텍스트에 대한 제목을 반환한다.
+	 *
+	 * @param string $context 컨텍스트명
+	 * @return string $title 컨텍스트 제목
+	 */
+	function getContextTitle($context) {
+		return $this->getText('context/'.$context);
+	}
+	
+	/**
+	 * [사이트관리자] 모듈의 컨텍스트 환경설정을 구성한다.
+	 *
+	 * @param object $site 설정대상 사이트
+	 * @param object $values 설정값
+	 * @param string $context 설정대상 컨텍스트명
+	 * @return object[] $configs 환경설정
+	 */
+	function getContextConfigs($site,$values,$context) {
+		$configs = array();
+		
+		$templet = new stdClass();
+		$templet->title = $this->IM->getText('text/templet');
+		$templet->name = 'templet';
+		$templet->type = 'templet';
+		$templet->target = 'sms';
+		$templet->use_default = true;
+		$templet->value = $values != null && isset($values->templet) == true ? $values->templet : '#';
+		$configs[] = $templet;
+		
+		return $configs;
 	}
 	
 	/**
@@ -248,18 +356,6 @@ class ModuleSms {
 		
 		$description = null;
 		switch ($code) {
-			case 'NOT_ALLOWED_SIGNUP' :
-				if ($value != null && is_object($value) == true) {
-					$description = $value->title;
-				}
-				break;
-				
-			case 'DISABLED_LOGIN' :
-				if ($value != null && is_numeric($value) == true) {
-					$description = str_replace('{SECOND}',$value,$this->getText('text/remain_time_second'));
-				}
-				break;
-			
 			default :
 				if (is_object($value) == false && $value) $description = $value;
 		}
@@ -271,6 +367,159 @@ class ModuleSms {
 		
 		if ($isRawData === true) return $error;
 		else return $this->IM->getErrorText($error);
+	}
+	
+	/**
+	 * 템플릿 정보를 가져온다.
+	 *
+	 * @param string $this->getTemplet($configs) 템플릿명
+	 * @return string $package 템플릿 정보
+	 */
+	function getTemplet($templet=null) {
+		$templet = $templet == null ? '#' : $templet;
+		
+		/**
+		 * 사이트맵 관리를 통해 설정된 페이지 컨텍스트 설정일 경우
+		 */
+		if (is_object($templet) == true) {
+			$templet_configs = $templet !== null && isset($templet->templet_configs) == true ? $templet->templet_configs : null;
+			$templet = $templet !== null && isset($templet->templet) == true ? $templet->templet : '#';
+		} else {
+			$templet_configs = null;
+		}
+		
+		/**
+		 * 템플릿명이 # 이면 모듈 기본설정에 설정된 템플릿을 사용한다.
+		 */
+		if ($templet == '#') {
+			$templet = $this->getModule()->getConfig('templet');
+			$templet_configs = $this->getModule()->getConfig('templet_configs');
+		}
+		
+		return $this->getModule()->getTemplet($templet,$templet_configs);
+	}
+	
+	/**
+	 * 페이지 컨텍스트를 가져온다.
+	 *
+	 * @param string $cidx 카테고리 고유번호
+	 * @param object $configs 사이트맵 관리를 통해 설정된 페이지 컨텍스트 설정
+	 * @return string $html 컨텍스트 HTML
+	 */
+	function getContext($context,$configs=null) {
+		/**
+		 * 모듈 기본 스타일 및 자바스크립트
+		 */
+		$this->IM->addHeadResource('style',$this->getModule()->getDir().'/styles/style.css');
+		
+		$html = PHP_EOL.'<!-- SMS MODULE -->'.PHP_EOL.'<div data-role="context" data-type="module" data-module="'.$this->getModule()->getName().'" data-base-url="'.($this->baseUrl == null ? $this->IM->getUrl(null,null,false) : $this->baseUrl).'" data-context="'.$context.'" data-configs="'.GetString(json_encode($configs),'input').'">'.PHP_EOL;
+		
+		$html.= $this->getHeader($configs);
+		
+		switch ($context) {
+			case 'send' :
+				$html.= $this->getSendContext($configs);
+				break;
+		}
+		
+		$html.= $this->getFooter($configs);
+		
+		/**
+		 * 컨텍스트 컨테이너를 설정한다.
+		 */
+		$html.= PHP_EOL.'</div>'.PHP_EOL.'<!--// SMS MODULE -->'.PHP_EOL;
+		
+		return $html;
+	}
+	
+	/**
+	 * 모듈 외부컨테이너를 가져온다.
+	 *
+	 * @param string $container 컨테이너명
+	 * @return string $html 컨텍스트 HTML
+	 */
+	function getContainer($container) {
+		switch ($container) {
+			case 'send' :
+				$midx = $this->getView() ? $this->getView() : null;
+				$configs = new stdClass();
+				$configs->midx = $midx;
+				
+				$html = $this->getContext($container,$configs);
+				break;
+		}
+		
+		$this->IM->removeTemplet();
+		$footer = $this->IM->getFooter();
+		$header = $this->IM->getHeader();
+		
+		return $header.$html.$footer;
+	}
+	
+	/**
+	 * 컨텍스트 헤더를 가져온다.
+	 *
+	 * @param object $configs 사이트맵 관리를 통해 설정된 페이지 컨텍스트 설정
+	 * @return string $html 컨텍스트 HTML
+	 */
+	function getHeader($configs=null) {
+		/**
+		 * 템플릿파일을 호출한다.
+		 */
+		return $this->getTemplet($configs)->getHeader(get_defined_vars());
+	}
+	
+	/**
+	 * 컨텍스트 푸터를 가져온다.
+	 *
+	 * @param object $configs 사이트맵 관리를 통해 설정된 페이지 컨텍스트 설정
+	 * @return string $html 컨텍스트 HTML
+	 */
+	function getFooter($configs=null) {
+		/**
+		 * 템플릿파일을 호출한다.
+		 */
+		return $this->getTemplet($configs)->getFooter(get_defined_vars());
+	}
+	
+	/**
+	 * 에러메세지를 반환한다.
+	 *
+	 * @param string $code 에러코드 (에러코드는 iModule 코어에 의해 해석된다.)
+	 * @param object $value 에러코드에 따른 에러값
+	 * @return $html 에러메세지 HTML
+	 */
+	function getError($code,$value=null) {
+		/**
+		 * iModule 코어를 통해 에러메세지를 구성한다.
+		 */
+		$error = $this->getErrorText($code,$value,true);
+		return $this->IM->getError($error);
+	}
+	
+	/**
+	 * SMS 발송 컨텍스트를 가져온다.
+	 *
+	 * @param object $configs 사이트맵 관리를 통해 설정된 페이지 컨텍스트 설정
+	 * @return string $html 컨텍스트 HTML
+	 */
+	function getSendContext($configs=null) {
+		if ($this->IM->getModule('member')->isLogged() == false) return $this->getError('REQUIRED_LOGIN');
+		
+		$midx = $configs != null && isset($configs->midx) == true ? $configs->midx : null;
+		if ($midx != null) {
+			$receiver = $this->IM->getModule('member')->getMember($midx);
+		}
+		
+		$member = $this->IM->getModule('member')->getMember();
+		$header = PHP_EOL.'<form id="ModuleSmsSendForm">'.PHP_EOL;
+		if ($midx != null) $header.= '<input type="hidden" name="midx" value="'.$midx.'">'.PHP_EOL;
+		$footer = PHP_EOL.'</form>'.PHP_EOL.'<script>Sms.send.init("ModuleSmsSendForm");</script>'.PHP_EOL;
+		
+		/**
+		 * 템플릿파일을 호출한다.
+		 */
+		return $this->getTemplet($configs)->getContext('send',get_defined_vars(),$header,$footer);
 	}
 	
 	/**
@@ -362,7 +611,7 @@ class ModuleSms {
 		$oMessage = trim($this->message);
 		
 		while (true) {
-			if ($this->getModule()->getConfig('lms') == false && $this->getMessageLength($oMessage) > 80) {
+			if ($this->getModule()->getConfig('use_lms') == false && $this->getMessageLength($oMessage) > 80) {
 				$message = $this->getCutMessage($oMessage,80);
 				$oMessage = trim(preg_replace('/^'.GetString($message,'reg').'/','',$oMessage));
 			} else {

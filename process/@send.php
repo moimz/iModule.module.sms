@@ -2,12 +2,12 @@
 /**
  * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
  *
- * 받는사람 목록을 가져온다.
+ * SMS 을 전송한다.
  * 
  * @file /modules/sms/process/@send.php
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
- * @version 3.0.0
+ * @version 3.1.0
  * @modified 2018. 11. 13.
  */
 if (defined('__IM__') == false) exit;

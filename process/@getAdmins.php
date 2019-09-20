@@ -1,13 +1,13 @@
 <?php
 /**
- * 이 파일은 지도교수상담모듈의 일부입니다. (http://www.coursemos.kr)
+ * 이 파일은 iModule SMS모듈의 일부입니다. (https://www.imodules.io)
  *
  * 관리자 목록을 불러온다.
  * 
- * @file /modules/advisor/process/@getAdmins.php
+ * @file /modules/sms/process/@getAdmins.php
  * @author Eunseop Lim (eslim@naddle.net)
  * @license MIT License
- * @version 3.0.0
+ * @version 3.1.0
  * @modified 2019. 7. 18.
  */
 if (defined('__IM__') == false) exit;
