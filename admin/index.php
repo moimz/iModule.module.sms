@@ -7,8 +7,8 @@
  * @file /modules/sms/admin/index.php
  * @author Arzz (arzz@arzz.com)
  * @license GPLv3
- * @version 3.0.0
- * @modified 2019. 2. 6.
+ * @version 3.0.1
+ * @modified 2019. 9. 20.
  */
 if (defined('__IM__') == false) exit;
 ?>
@@ -243,6 +243,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 				border:false,
 				tbar:[
 					new Ext.Button({
+						id:"ModuleSmsAdminListAddButton",
 						text:"관리자 추가",
 						iconCls:"xi xi-form",
 						handler:function() {
