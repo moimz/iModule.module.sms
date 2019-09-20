@@ -80,13 +80,12 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 					"-",
 					new Ext.form.ComboBox({
 						id:"ModuleSmsSendListKeycode",
-						visibility:"calendar,application",
 						store:new Ext.data.ArrayStore({
 							fields:["display","value"],
 							data:(function() {
 								var datas = [];
-								for (var field in Sms.getText("admin/list/keyfields")) {
-									datas.push([Sms.getText("admin/list/keyfields/"+field),field]);
+								for (var field in Sms.getText("admin/list/keycodes")) {
+									datas.push([Sms.getText("admin/list/keycodes/"+field),field]);
 								}
 								return datas;
 							})()
@@ -104,7 +103,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 					}),
 					"-",
 					new Ext.Button({
-						text:Sms.getText("admin/list/send"),
+						text:Sms.getText("admin/list/write"),
 						iconCls:"mi mi-plus",
 						handler:function() {
 							Sms.write();
@@ -129,7 +128,7 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 					sorters:[{property:"reg_date",direction:"DESC"}],
 					autoLoad:true,
 					pageSize:50,
-					fields:["bid","title","nickname","exp","point","reg_date","last_login","display_url","count","image"],
+					fields:["receiver","receiver_name","sender","sender_name","message","reg_date","status"],
 					listeners:{
 						load:function(store,records,success,e) {
 							if (success == false) {

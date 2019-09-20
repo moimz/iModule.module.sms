@@ -23,11 +23,11 @@
 		},
 		"list":{
 			"title":"SMS발송기록",
-			"send":"SMS발송",
+			"write":"SMS발송",
 			"delete":"선택기록삭제",
 			"keyword":"검색어",
 			"all_period":"전체기간",
-			"keyfields":{
+			"keycodes":{
 				"sender":"발송자",
 				"sender_number":"발송번호",
 				"receiver":"수신자",
