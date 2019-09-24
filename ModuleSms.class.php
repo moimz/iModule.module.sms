@@ -36,6 +36,13 @@ class ModuleSms {
 	private $oLang = null;
 	
 	/**
+	 * DB접근을 줄이기 위해 DB에서 불러온 데이터를 저장할 변수를 정의한다.
+	 *
+	 * @private object[] $admins 관리자정보
+	 */
+	private $admins = array();
+	
+	/**
 	 * SMS 발송을 위한 정보
 	 */
 	private $sender = null;
@@ -723,7 +730,10 @@ class ModuleSms {
 		$midx = $midx == null ? $this->IM->getModule('member')->getLogged() : $midx;
 		if ($this->IM->getModule('member')->isAdmin($midx) == true) return true;
 		
-		return $this->db()->select($this->table->admin)->where('midx',$midx)->has();
+		if (isset($this->admins[$midx]) == true) return $this->admins[$midx];
+		
+		$this->admins[$midx] = $this->db()->select($this->table->admin)->where('midx',$midx)->has();
+		return $this->admins[$midx];
 	}
 }
 ?>
