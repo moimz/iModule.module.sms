@@ -8,23 +8,26 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.1.0
- * @modified 2019. 8. 21.
+ * @modified 2019. 11. 4.
  */
 if (defined('__IM__') == false) exit;
 
 $errors = array();
 $sender = Request('sender') ? Request('sender') : $errors['sender'] = $this->getErrorText('REQUIRED');
+$midxes = Request('midxes');
 $midx = Request('midx');
 $message = Request('message') ? Request('message') : $errors['message'] = $this->getErrorText('REQUIRED');
 
-if ($midx == null) {
+if ($midxes == null && $midx == null) {
 	$receiver = Request('receiver') ? Request('receiver') : $errors['receiver'] = $this->getErrorText('REQUIRED');
-} else {
-	$receiver = Request('receiver');
+} elseif ($midxes == null) {
+	$midxes = array($midx);
 }
 
 if (count($errors) == 0) {
-	$result = $this->setSender($this->IM->getModule('member')->getLogged(),$sender)->setReceiver($midx,$receiver)->setMessage($message)->send();
+	foreach ($midxes as $midx) {
+		$result = $this->setSender($this->IM->getModule('member')->getLogged(),$sender)->setReceiver($midx)->setMessage($message)->send();
+	}
 	
 	$results->success = $result !== true ? false : true;
 	$results->error = $result !== true ? $result : null;

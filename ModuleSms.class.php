@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.1.0
- * @modified 2019. 8. 21.
+ * @modified 2019. 11. 4.
  */
 class ModuleSms {
 	/**
@@ -513,14 +513,27 @@ class ModuleSms {
 	function getSendContext($configs=null) {
 		if ($this->IM->getModule('member')->isLogged() == false) return $this->getError('REQUIRED_LOGIN');
 		
-		$midx = $configs != null && isset($configs->midx) == true ? $configs->midx : null;
-		if ($midx != null) {
-			$receiver = $this->IM->getModule('member')->getMember($midx);
+		$receivers = null;
+		$midxes = Request('midxes');
+		if ($midxes == null) {
+			$midx = $configs != null && isset($configs->midx) == true ? $configs->midx : null;
+			if ($midx != null) {
+				$receiver = $this->IM->getModule('member')->getMember($midx);
+			}
+		} elseif (is_array($midxes) == true) {
+			$receivers = array();
 		}
 		
 		$member = $this->IM->getModule('member')->getMember();
 		$header = PHP_EOL.'<form id="ModuleSmsSendForm">'.PHP_EOL;
-		if ($midx != null) $header.= '<input type="hidden" name="midx" value="'.$midx.'">'.PHP_EOL;
+		if ($midxes == null) {
+			if ($midx != null) $header.= '<input type="hidden" name="midx" value="'.$midx.'">'.PHP_EOL;
+		} elseif (is_array($midxes) == true) {
+			foreach ($midxes as $midx) {
+				$header.= '<input type="hidden" name="midxes[]" value="'.$midx.'">'.PHP_EOL;
+				$receivers[] = $this->IM->getModule('member')->getMember($midx);
+			}
+		}
 		$footer = PHP_EOL.'</form>'.PHP_EOL.'<script>Sms.send.init("ModuleSmsSendForm");</script>'.PHP_EOL;
 		
 		/**

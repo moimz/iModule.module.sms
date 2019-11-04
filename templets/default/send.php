@@ -24,13 +24,19 @@ if (defined('__IM__') == false) exit;
 	<li>
 		<label>수신번호</label>
 		<div>
-			<?php if ($midx == null) { ?>
+			<?php if ($midxes == null && $midx == null) { ?>
 			<div data-role="input">
 				<input type="text" name="receiver" placeholder="000-0000-0000">
 			</div>
-			<?php } else { ?>
+			<?php } elseif ($midxes == null) { ?>
 			<div data-role="text">
 				<b><?php echo $receiver->nickname; ?></b> (<?php echo $receiver->cellphone; ?>)
+			</div>
+			<?php } else { ?>
+			<div data-role="text">
+				<?php foreach ($receivers as $receiver) { ?>
+				<b><?php echo $receiver->nickname; ?></b> (<?php echo $receiver->cellphone; ?>)<br>
+				<?php } ?>
 			</div>
 			<?php } ?>
 		</div>
