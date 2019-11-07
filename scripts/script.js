@@ -7,21 +7,23 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.1.0
- * @modified 2019. 8. 21.
+ * @modified 2019. 11. 7.
  */
 var Sms = {
 	sendPopup:function(midx) {
 		if (typeof midx == "object") {
-			var popup = iModule.openPopup("",500,450,1,"send");
+			var popup = iModule.openPopup("",500,450,1);
+			
 			if (popup) {
-				var $body = $(popup.document.body);
+				var document = popup.document;
+				document.write('<form method="post" action="' + location.href.replace(location.pathname+location.search,"") + ENV.getModuleUrl("sms","@send",false) + '">');
 				
-				var $form = $("<form>").attr("method","post").attr("action",location.href.replace(location.pathname+location.search,"") + ENV.getModuleUrl("sms","@send",false));
 				for (var i=0, loop=midx.length;i<loop;i++) {
-					$form.append($("<input>").attr("type","hidden").attr("name","midxes[]").attr("value",midx[i]));
+					document.write('<input type="hidden" name="midxes[]" value="' + midx[i] + '">');
 				}
-				$body.append($form);
-				$form.submit();
+				
+				var form = popup.document.getElementsByTagName("form");
+				form[0].submit();
 			}
 		} else {
 			iModule.openPopup(ENV.getModuleUrl("sms","@send",midx ? midx : ""),500,450,1,"send");
