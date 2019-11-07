@@ -16,7 +16,7 @@ var Sms = {
 			if (popup) {
 				var $body = $(popup.document.body);
 				
-				var $form = $("<form>").attr("method","post").attr("action",location.href.replace(location.pathname,"") + ENV.getModuleUrl("sms","@send",false));
+				var $form = $("<form>").attr("method","post").attr("action",location.href.replace(location.pathname+location.search,"") + ENV.getModuleUrl("sms","@send",false));
 				for (var i=0, loop=midx.length;i<loop;i++) {
 					$form.append($("<input>").attr("type","hidden").attr("name","midxes[]").attr("value",midx[i]));
 				}
