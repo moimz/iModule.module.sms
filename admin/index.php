@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license GPLv3
  * @version 3.1.0
- * @modified 2019. 9. 20.
+ * @modified 2020. 2. 19.
  */
 if (defined('__IM__') == false) exit;
 ?>
@@ -114,6 +114,39 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 						iconCls:"mi mi-trash",
 						handler:function() {
 							Sms.list.delete();
+						}
+					}),
+					"->",
+					new Ext.button.Segmented({
+						allowMultiple:false,
+						items:[
+							new Ext.Button({
+								text:"전체",
+								is_push:"",
+								pressed:true,
+								iconCls:"fa fa-check-square-o"
+							}),
+							new Ext.Button({
+								text:"알림발송",
+								is_push:"TRUE",
+								iconCls:"fa fa-square-o"
+							}),
+							new Ext.Button({
+								text:"직접발송",
+								is_push:"FALSE",
+								iconCls:"fa fa-square-o"
+							})
+						],
+						listeners:{
+							toggle:function(segmented,button,pressed) {
+								for (var i=0, loop=segmented.items.items.length;i<loop;i++) {
+									segmented.items.items[i].setIconCls("fa fa-square-o");
+								}
+								
+								Ext.getCmp("ModuleSmsSendList").getStore().getProxy().setExtraParam("is_push",button.is_push);
+								Ext.getCmp("ModuleSmsSendList").getStore().loadPage(1);
+								button.setIconCls("fa fa-check-square-o");
+							}
 						}
 					})
 				],

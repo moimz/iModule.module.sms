@@ -80,6 +80,12 @@
 					"type":"text",
 					"comment":"발송메시지"
 				},
+				"is_push":{
+					"type":"enum",
+					"length":"'TRUE','FALSE'",
+					"default":"FALSE",
+					"comment":"알림메시지여부"
+				},
 				"reg_date":{
 					"type":"int",
 					"length":11,

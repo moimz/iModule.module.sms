@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.1.0
- * @modified 2019. 11. 4.
+ * @modified 2020. 2. 19.
  */
 class ModuleSms {
 	/**
@@ -48,6 +48,7 @@ class ModuleSms {
 	private $sender = null;
 	private $receiver = null;
 	private $message = null;
+	private $is_push = false;
 	
 	/**
 	 * 기본 URL (다른 모듈에서 호출되었을 경우에 사용된다.)
@@ -582,12 +583,25 @@ class ModuleSms {
 	}
 	
 	/**
+	 * 알림메시지 여부를 입력한다.
+	 *
+	 * @param boolean $is_push
+	 * @return $this
+	 */
+	function setPush($is_push) {
+		$this->is_push = true;
+		
+		return $this;
+	}
+	
+	/**
 	 * 발송정보를 초기화한다.
 	 */
 	function reset() {
 		$this->sender = null;
 		$this->receiver = null;
 		$this->message = null;
+		$this->is_push = false;
 	}
 	
 	/**
@@ -654,7 +668,7 @@ class ModuleSms {
 				$this->IM->fireEvent('beforeDoProcess','sms','sending',$values,$results);
 			}
 			
-			$this->db()->insert($this->table->send,array('frommidx'=>$values->sender->midx,'tomidx'=>$values->receiver->midx,'sender'=>$values->sender->cellphone,'receiver'=>$values->receiver->cellphone,'message'=>$message,'reg_date'=>time(),'status'=>$results->success == true ? 'SUCCESS' : 'FAIL'))->execute();
+			$this->db()->insert($this->table->send,array('frommidx'=>$values->sender->midx,'tomidx'=>$values->receiver->midx,'sender'=>$values->sender->cellphone,'receiver'=>$values->receiver->cellphone,'message'=>$message,'reg_date'=>time(),'is_push'=>$this->is_push == true ? 'TRUE' : 'FALSE','status'=>$results->success == true ? 'SUCCESS' : 'FAIL'))->execute();
 			
 			if ($is_fire_event == true) {
 				$values = new stdClass();

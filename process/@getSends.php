@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.1.0
- * @modified 2018. 11. 13.
+ * @modified 2020. 2. 19.
  */
 if (defined('__IM__') == false) exit;
 
@@ -22,9 +22,10 @@ $end_date = Request('end_date') ? strtotime(Request('end_date')) : time();
 $mMember = $this->IM->getModule('member');
 $keycode = Request('keycode');
 $keyword = Request('keyword');
+$is_push = Request('is_push');
 
 $lists = $this->db()->select($this->table->send.' s','s.*')->join($mMember->getTable('member').' sm','sm.idx=s.frommidx','LEFT')->join($mMember->getTable('member').' rm','rm.idx=s.tomidx','LEFT')->where('s.reg_date',$start_date,'>=')->where('s.reg_date',$end_date,'<');
-
+if ($is_push) $lists->where('s.is_push',$is_push);
 if ($keyword) {
 	if ($keycode == 'sender_number') {
 		$keyword = str_replace('-','',$keyword);
