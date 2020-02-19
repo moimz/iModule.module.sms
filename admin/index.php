@@ -199,7 +199,13 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 					minWidth:200,
 					flex:1,
 					sortable:true,
-					dataIndex:"message"
+					dataIndex:"message",
+					renderer:function(value,p,record) {
+						var sHTML = "";
+						if (record.data.is_push == "TRUE") sHTML+= '<i class="icon fa fa-bell-o"></i>';
+						sHTML+= value;
+						return sHTML;
+					}
 				},{
 					text:Sms.getText("admin/list/columns/reg_date"),
 					width:130,
