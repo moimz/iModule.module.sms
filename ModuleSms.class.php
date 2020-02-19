@@ -668,7 +668,7 @@ class ModuleSms {
 				$this->IM->fireEvent('beforeDoProcess','sms','sending',$values,$results);
 			}
 			
-			$this->db()->insert($this->table->send,array('frommidx'=>$values->sender->midx,'tomidx'=>$values->receiver->midx,'sender'=>$values->sender->cellphone,'receiver'=>$values->receiver->cellphone,'message'=>$message,'reg_date'=>time(),'is_push'=>$this->is_push == true ? 'TRUE' : 'FALSE','status'=>$results->success == true ? 'SUCCESS' : 'FAIL'))->execute();
+			$this->db()->insert($this->table->send,array('frommidx'=>$values->sender->midx,'tomidx'=>$values->receiver->midx,'sender'=>$values->sender->cellphone,'receiver'=>$values->receiver->cellphone,'message'=>$message,'reg_date'=>time(),'is_push'=>($this->is_push == true ? 'TRUE' : 'FALSE'),'status'=>$results->success == true ? 'SUCCESS' : 'FAIL'))->execute();
 			
 			if ($is_fire_event == true) {
 				$values = new stdClass();
