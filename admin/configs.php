@@ -42,6 +42,12 @@ new Ext.form.Panel({
 					name:"prefix",
 					allowBlank:true,
 					afterBodyEl:'<div class="x-form-help">'+Sms.getText("admin/configs/form/prefix_help")+'</div>'
+				}),
+				new Ext.form.TextField({
+					fieldLabel:Sms.getText("admin/configs/form/postfix"),
+					name:"postfix",
+					allowBlank:true,
+					afterBodyEl:'<div class="x-form-help">'+Sms.getText("admin/configs/form/postfix_help")+'</div>'
 				})
 			]
 		})

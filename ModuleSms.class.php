@@ -642,7 +642,7 @@ class ModuleSms {
 			return 'WRONG_RECEIVER_CELLPHONE';
 		}
 		
-		$oMessage = trim($this->getModule()->getConfig('prefix').$this->message);
+		$oMessage = trim($this->getModule()->getConfig('prefix').$this->message.$this->getModule()->getConfig('postfix'));
 		
 		while (true) {
 			if ($this->getModule()->getConfig('use_lms') == false && $this->getMessageLength($oMessage) > 80) {

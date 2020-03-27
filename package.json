@@ -37,6 +37,10 @@
 		"prefix":{
 			"type":"string",
 			"default":""
+		},
+		"postfix":{
+			"type":"string",
+			"default":""
 		}
 	},
 	"databases":{
