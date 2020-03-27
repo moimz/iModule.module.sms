@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license GPLv3
  * @version 3.1.0
- * @modified 2019. 8. 21.
+ * @modified 2020. 3. 27.
  */
 if (defined('__IM__') == false) exit;
 ?>
@@ -36,6 +36,12 @@ new Ext.form.Panel({
 					uncheckedValue:"",
 					checked:true,
 					afterBodyEl:'<div class="x-form-help">'+Sms.getText("admin/configs/form/use_lms_help_default")+'</div>'
+				}),
+				new Ext.form.TextField({
+					fieldLabel:Sms.getText("admin/configs/form/prefix"),
+					name:"prefix",
+					allowBlank:true,
+					afterBodyEl:'<div class="x-form-help">'+Sms.getText("admin/configs/form/prefix_help")+'</div>'
 				})
 			]
 		})

@@ -17,8 +17,10 @@
 				"templet":"템플릿",
 				"default_sender":"기본발송번호",
 				"use_lms":"LMS사용",
-				"use_lms_help":"문자길이가 긴 경우 LMS으로 발송합니다.",
-				"use_lms_help_default":"LMS으로 발송을 하지 않을 경우 80자로 끊어서 발송합니다."
+				"use_lms_help":"문자메시지 길이가 긴 경우 LMS으로 발송합니다.",
+				"use_lms_help_default":"LMS으로 발송을 하지 않을 경우 80자로 끊어서 발송합니다.",
+				"prefix":"말머리",
+				"prefix_help":"모든 문자메시지앞에 고정적으로 추가할 텍스트를 설정할 수 있습니다."
 			}
 		},
 		"list":{

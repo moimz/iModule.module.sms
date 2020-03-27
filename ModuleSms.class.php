@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.1.0
- * @modified 2020. 2. 19.
+ * @modified 2020. 3. 27.
  */
 class ModuleSms {
 	/**
@@ -642,7 +642,7 @@ class ModuleSms {
 			return 'WRONG_RECEIVER_CELLPHONE';
 		}
 		
-		$oMessage = trim($this->message);
+		$oMessage = trim($this->getModule()->getConfig('prefix').$this->message);
 		
 		while (true) {
 			if ($this->getModule()->getConfig('use_lms') == false && $this->getMessageLength($oMessage) > 80) {

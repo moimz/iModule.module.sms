@@ -33,6 +33,10 @@
 		"use_lms":{
 			"type":"boolean",
 			"default":true
+		},
+		"prefix":{
+			"type":"string",
+			"default":""
 		}
 	},
 	"databases":{
