@@ -8,7 +8,8 @@
 	},
 	"status":{
 		"SUCCESS":"성공",
-		"FAIL":"실패"
+		"FAIL":"실패",
+		"WAIT":"결과대기"
 	},
 	"admin":{
 		"configs":{

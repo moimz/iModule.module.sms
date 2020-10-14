@@ -99,9 +99,15 @@
 					"length":11,
 					"comment":"발송일"
 				},
+				"type":{
+					"type":"enum",
+					"length":"'SMS','LMS'",
+					"default":"SMS",
+					"comment":"전송방법"
+				},
 				"status":{
 					"type":"enum",
-					"length":"'SUCCESS','FAIL'",
+					"length":"'SUCCESS','FAIL','WAIT'",
 					"default":"SUCCESS",
 					"comment":"전송상태"
 				}

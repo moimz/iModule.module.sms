@@ -644,6 +644,8 @@ class ModuleSms {
 		
 		$oMessage = trim($this->getModule()->getConfig('prefix').$this->message.$this->getModule()->getConfig('postfix'));
 		
+		$type = $this->getMessageLength($oMessage) > 80 && $this->getModule()->getConfig('use_lms') == true ? 'LMS' : 'SMS';
+		
 		while (true) {
 			if ($this->getModule()->getConfig('use_lms') == false && $this->getMessageLength($oMessage) > 80) {
 				$message = $this->getCutMessage($oMessage,80);
@@ -653,11 +655,16 @@ class ModuleSms {
 				$oMessage = '';
 			}
 			
+			$idx = $this->db()->insert($this->table->send,array('frommidx'=>$this->sender->midx,'tomidx'=>$this->receiver->midx,'sender'=>$this->sender->cellphone,'receiver'=>$this->receiver->cellphone,'message'=>$message,'reg_date'=>time(),'is_push'=>($this->is_push == true ? 'TRUE' : 'FALSE'),'type'=>$type,'status'=>'WAIT'))->execute();
+			
 			$results = new stdClass();
 			$results->success = false;
+			$results->status = null;
 			
 			if ($is_fire_event == true) {
 				$values = new stdClass();
+				$values->idx = $idx;
+				$values->type = $type;
 				$values->sender = $this->sender;
 				$values->receiver = $this->receiver;
 				$values->message = $message;
@@ -668,10 +675,13 @@ class ModuleSms {
 				$this->IM->fireEvent('beforeDoProcess','sms','sending',$values,$results);
 			}
 			
-			$this->db()->insert($this->table->send,array('frommidx'=>$values->sender->midx,'tomidx'=>$values->receiver->midx,'sender'=>$values->sender->cellphone,'receiver'=>$values->receiver->cellphone,'message'=>$message,'reg_date'=>time(),'is_push'=>($this->is_push == true ? 'TRUE' : 'FALSE'),'status'=>$results->success == true ? 'SUCCESS' : 'FAIL'))->execute();
+			$status = $results->status != null ? $results->status : ($results->success == true ? 'SUCCESS' : 'FALSE');
+			$this->db()->update($this->table->send,array('status'=>$status))->where('idx',$idx)->execute();
 			
 			if ($is_fire_event == true) {
 				$values = new stdClass();
+				$values->idx = $idx;
+				$values->type = $type;
 				$values->sender = $this->sender;
 				$values->receiver = $this->receiver;
 				$values->message = $message;

@@ -222,8 +222,8 @@ Ext.onReady(function () { Ext.getCmp("iModuleAdminPanel").add(
 					dataIndex:"status",
 					sortable:true,
 					renderer:function(value,p) {
-						if (value == "FAIL") p.style = "color:red;";
-						else p.style = "color:blue;";
+						if (value == "SUCCESS") p.style = "color:blue;";
+						else if (value == "FAIL") p.style = "color:red;";
 						
 						return Sms.getText("status/"+value);
 					}
