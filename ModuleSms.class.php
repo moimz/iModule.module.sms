@@ -8,7 +8,7 @@
  * @author Arzz (arzz@arzz.com)
  * @license MIT License
  * @version 3.1.0
- * @modified 2020. 3. 27.
+ * @modified 2021. 6. 22.
  */
 class ModuleSms {
 	/**
@@ -548,6 +548,7 @@ class ModuleSms {
 	 *
 	 * @param int $midx 발송회원고유번호 (없을경우 현재 로그인한 사용자)
 	 * @param string $cellphone 발송번호 (없을경우 $midx 회원 전화번호)
+	 * @return ModuleSms $this
 	 */
 	function setSender($midx=null,$cellphone=null) {
 		$this->sender = new stdClass();
@@ -562,6 +563,7 @@ class ModuleSms {
 	 *
 	 * @param int $midx 받는회원고유번호 (없을경우 현재 로그인한 사용자)
 	 * @param string $cellphone 받는번호 (없을경우 $midx 회원 전화번호)
+	 * @return ModuleSms $this
 	 */
 	function setReceiver($midx=null,$cellphone=null) {
 		$this->receiver = new stdClass();
@@ -575,6 +577,7 @@ class ModuleSms {
 	 * 발송내용을 입력한다.
 	 *
 	 * @param string $message
+	 * @return ModuleSms $this
 	 */
 	function setMessage($message) {
 		$this->message = $message;
@@ -586,7 +589,7 @@ class ModuleSms {
 	 * 알림메시지 여부를 입력한다.
 	 *
 	 * @param boolean $is_push
-	 * @return $this
+	 * @return ModuleSms $this
 	 */
 	function setPush($is_push) {
 		$this->is_push = true;
